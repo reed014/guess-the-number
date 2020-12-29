@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Number</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-center">
+    <nav class="navbar navbar-dark bg-dark">
+        <!-- Navbar content -->
+        <a class="navbar-brand" href="#">Guess The Number</a>
+    </nav>
+    <main>
+        <h1 a class="banner p-3">1.2.3</h1>
+        <div id="form-group ">
+            <input id="number-guess" class="form-control form-control-lg" type="number" placeholder="What's your guess?">
+        </div>
+        <div id="result">
+            <!--This is result will be-->
+        </div>
+        
+        <button type="button" id= "number-sumbit" class="btn btn-lg btnsecondary" onclick="playGame()">Check Me</button>
+        <button type="button" id= "restart-game" class="btn btn-lg btnsecondary" onclick="initGame()">restart</button>
+        
+        <div id="history">
+            <!-- This is where the guess history will be-->
+        </div>
+    </main>
+    <script src="script.js" defer></script>
+</body>
+</html>
