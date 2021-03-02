@@ -1,178 +1,108 @@
 /**
- * DONE: Change sortMoviesByRank() function to sort movies list by rank
- * DONE: Sort movies by id, rank, and title through dynamic function
- * DONE: Create helper function called getMaxMovieObject() for finding max movie
+ * Guess The Number Game
  */
 
-// List of movies
-let movies = [
-    {
-        title: "Fight Club",
-        rank: 10,
-        id: "tt0137523"
-    },
-    {
-        title: "The Shawshank Redemption",
-        rank: 1,
-        id: "tt0111161"
-    },
-    {
-        title: "The Lord of the Rings: The Return of the King",
-        rank: 9,
-        id: "tt0167260"
-    },
-    {
-        title: "The Godfather",
-        rank: 2,
-        id: "tt0068646"
-    },
-    {
-        title: "The Good, the Bad and the Ugly",
-        rank: 5,
-        id: "tt0060196"
-    },
-    {
-        title: "The Godfather: Part II",
-        rank: 3,
-        id: "tt0071562"
-    },
-    {
-        title: "The Dark Knight",
-        rank: 6,
-        id: "tt0468569"
-    },
-    {
-        title: "Pulp Fiction",
-        rank: 4,
-        id: "tt0110912"
-    },
-    {
-        title: "Schindler's List",
-        rank: 8,
-        id: "tt0108052"
-    },
-    {
-        title: "12 Angry Men",
-        rank: 7,
-        id: "tt0050083"
-    }
-]
+// Variable to store the list of guesses 
+let guesses;
+// Variable for store the correct random number 
+let correctNumber;
 
 window.onload = function() {
-    //let sortedMovies = sortMoviesByRank(movies)
-    let sortedMovies = sortMoviesByAttr(movies, 'rank')
-    // Display Movies list
-    displayMovies(sortedMovies);
+    initGame()
+    document.getElementById("number-submit").addEventListener("click", playGame);
+    document.getElementById("restart-game").addEventListener("click", initGame)
 }
 
-/**
- * Display list of movies in a table
- * You don't have to worry so much about this
- */
-function displayMovies(movies){
-    let table = "<table border='1' style='width: 100%'>";
-    table += "<tr><th>ID</th><th>Name</th><th>Rank</th></tr>";
-    for(let index=0; index<movies.length; index++){
-        table += "<tr>";
-        table += "<td>" + movies[index].id + "</td>";
-        table += "<td>" + movies[index].title + "</td>";
-        table += "<td>" + movies[index].rank + "</td>";
-        table += "</tr>"
-    }
-    // Close the table
-    table += "</table>";
-    document.getElementById("movies-list").innerHTML = table;
+function playGame(){
+  let numberGuess = document.getElementById("number-guess").value;
+  saveGuessHistory(numberGuess)
+  displayHistory()
+  displayResult(numberGuess)
 }
 
+// Initialize a new game by resetting all values and content on the page
+function initGame(){
+  correctNumber = getRandomNumber();
+  guesses = []
+  displayHistory()
+  resetResultContent()
+}
 
-/**
- * Sort movies by rank from greatest to smallest 
- * HINT: make sure you are comparing the right value in in if(...)
- * HINT: replace numbers with movies .
- */
-function sortMoviesByRank(movies){
-  // Code from previous sortBestRatingsFirst() function
-    for (let j = 0; j < movies.length - 1; j++) {
+// Reset the results list display
+function resetResultContent(){
+  document.getElementById("result").innerHTML = "";
+}
 
-        let max_obj = movies[j];
-    //   {
-    //     title: "Fight Club",
-    //     rank: 10,
-    //     id: "tt0137523"
-    // },  
-        let max_location = j;
+// Return random number between 1 and 100
+function getRandomNumber(){
+  /**
+   * Math.random returns a number between 0 and 1,
+   * and that's why we multiply it by 100
+   */
+  return Math.floor((Math.random() * 100) + 1);
+}
 
-        // for (let i = j; i < movies.length; i++) {
-        //     if (movies[i].rank > max_obj.rank) {
-        //         // Know max AND it's index (location)
-        //         // if we founf with higher rank, then replace max_obj with the new object
-        //         max_obj = movies[i]
-        //         max_location = i
-        //     }
-        // }
-        // swap the first and the last
-        movies[max_location] = movies[j] // --> 10
-        movies[j] = max_obj
+// Save the user guess entered from the input
+function saveGuessHistory(guess) {
+  guesses.push(guess);
+}
+
+// Display history in HTML 
+function displayHistory() {
+  let index = guesses.length-1;
+  let list = "<ul class='list-group'>"
+  while(index >= 0){
+    list += 
+      "<li class='list-group-item'>" + 
+      "You guessed " + guesses[index] +
+      "</li>";
+    index-=1
   }
-
-  return movies
+  list += '</ul>'
+  document.getElementById("history").innerHTML = list;
 }
 
-/**
- * Sort movies by an attribute
- * @param sortAttr pass in 'id', 'title', or 'rank' to sort by
- */
-function sortMoviesByAttr(movies, sortAttr){
-    for (let j = 0; j < movies.length - 1; j++) {
-
-        let max_obj = movies[j];
-    //   {
-    //     title: "Fight Club",
-    //     rank: 10,
-    //     id: "tt0137523"
-    // },  
-        let max_location = j;
-        let max = getMaxMovieObject(movies, j, sortAttr);
-        max_obj = max.max_obj
-        max_location = max.max_index;
-        // for (let i = j; i < movies.length; i++) {
-        //     if (movies[i][sortAttr] > max_obj[sortAttr]) {
-        //         // Know max AND it's index (location)
-        //         // if we founf with higher rank, then replace max_obj with the new object
-        //         max_obj = movies[i]
-        //         max_location = i
-        //     }
-        // }
-        // swap the first and the last
-        movies[max_location] = movies[j] // --> 10
-        movies[j] = max_obj
+// Display the result in HTML
+function displayResult(numberGuess){
+  if(numberGuess > correctNumber) {
+    showNumberAbove()
+  } else if (numberGuess < correctNumber){
+    showNumberBelow()
+  } else {
+    showYouWon()
   }
-
-  return movies
 }
 
-
-
-/**
- * Retrieve the max movie object based on attribute
- * HINT: make sure you are comparing the right attribute
- */
-function getMaxMovieObject(movies, start, sortAttr){
-  // Code from previous findMaxHelper() function
-  let max_obj= movies[start];
-  let max_location = start
-
-  for (let i = start; i < movies.length; i++) {
-      if (movies[i][sortAttr]> max_obj[sortAttr]) {
-          max_obj= movies[i]
-          max_location = i
-      }
+// Retrieve the dialog based on if the guess is wrong or correct 
+function getDialog(dialogType, text){
+  let dialog;
+  switch(dialogType){
+    case "warning":
+      dialog = "<div class='alert alert-warning' role='alert'>"
+      break;
+    case "won":
+      dialog = "<div class='alert alert-success' role='alert'>"
+      break;
   }
-  return {max_obj: max_obj, max_index: max_location}
+  dialog += text;
+  dialog += "</div>"
+  return dialog;
 }
 
+function showYouWon(){
+  const text = "Awesome job, you got it!"
+  let dialog = getDialog('won', text)
+  document.getElementById("result").innerHTML = dialog;
+}
 
+function showNumberAbove(){
+  const text = "Your guess is too high!"
+  let dialog = getDialog('warning', text)
+  document.getElementById("result").innerHTML = dialog;
+}
 
-
-
-
+function showNumberBelow(){
+  const text = "Your guess is too low!"
+  let dialog = getDialog('warning', text)
+  document.getElementById("result").innerHTML = dialog;
+}
